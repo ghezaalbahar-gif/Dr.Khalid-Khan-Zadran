@@ -17,7 +17,7 @@ export default function Photo({ photoKey, ratio = 'aspect-[3/4]', className = ''
     <figure className={className}>
       <div className={`photo relative bg-tint ${ratio}`}>
         <motion.img
-          src={photo.src}
+          src={`${import.meta.env.BASE_URL}${photo.src.replace(/^\//, '')}`}
           alt={t(`data.photos.${photoKey}.alt`)}
           width={photo.w}
           height={photo.h}

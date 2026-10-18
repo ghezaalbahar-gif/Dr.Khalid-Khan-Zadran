@@ -78,7 +78,7 @@ export default function Navbar() {
           />
           <Link to="/" className="group flex items-center gap-3.5 ps-1" aria-label={t('ui.brandAria')}>
             <img
-              src="/images/logo-mark.svg"
+              src={`${import.meta.env.BASE_URL}images/logo-mark.svg`}
               alt=""
               width="44"
               height="44"

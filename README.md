@@ -250,11 +250,29 @@ location, phone line, and general descriptions of the consultations and procedur
 
 ## 10. Deployment
 
-The site is a static SPA. On **Vercel** or **Netlify**:
+The site is a static SPA, published on **GitHub Pages** at
+`https://ghezaalbahar-gif.github.io/Dr.Khalid-Khan-Zadran/`.
 
-- Framework preset: *Vite*
-- Build command: `npm run build` · Output directory: `dist`
-- Add one rewrite so client-side routes resolve:
+Pages hosts a project site under a sub-path, which a Vite SPA has to be told about:
+
+- `base: '/Dr.Khalid-Khan-Zadran/'` in `vite.config.js` prefixes every built asset URL.
+- `BrowserRouter` takes `basename={import.meta.env.BASE_URL}`, so router links stay inside the sub-path.
+- Runtime image paths are built from `import.meta.env.BASE_URL` too, because Vite only rebases what it
+  can see at build time (`index.html` and imports), not strings inside components.
+- The `spa-404-fallback` plugin copies `dist/index.html` to `dist/404.html`. Pages has no rewrite rule,
+  so a direct visit to `/procedures` gets that file, and the router still renders the right page.
+
+The published branch is `gh-pages`, which holds only build output:
+
+```bash
+npm run build && npx gh-pages -d dist
+```
+
+Pages must be pointed at it once, under **Settings → Pages → Source → Deploy from a branch → `gh-pages`
+/ `/`**. Re-running the command after any change to `main` replaces the live site.
+
+To move to **Vercel** or **Netlify** instead, set `base` back to `'/'`, drop the `404.html` plugin, and
+add one rewrite so client-side routes resolve:
 
 ```json
 { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
