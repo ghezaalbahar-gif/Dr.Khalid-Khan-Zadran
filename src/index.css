@@ -1,0 +1,358 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Deep navy, clinical azure, cool paper — a medical register, not a gaming one. */
+  --color-ink: #0b2545;
+  --color-deep: #33526f;
+  --color-bone: #f5f8fb;
+  --color-paper: #ffffff;
+  --color-tint: #e9f2f7;
+  --color-line: #dbe6f0;
+  --color-accent: #0e7c9b;
+  --color-accent-deep: #0a5d76;
+  --color-accent-lite: #6fd0e8;
+  --color-accent-soft: #d9edf4;
+  --color-signal: #b4442c;
+  --color-muted: #56708a;
+  --color-sky: #dceaf5;
+
+  --font-display: 'Lora', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Manrope', ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --radius-card: 1.25rem;
+  --radius-panel: 1.75rem;
+
+  --shadow-soft: 0 1px 2px rgba(11, 37, 69, 0.05), 0 18px 40px -24px rgba(11, 37, 69, 0.26);
+  --shadow-lift: 0 2px 6px rgba(11, 37, 69, 0.07), 0 34px 64px -28px rgba(11, 37, 69, 0.36);
+  --shadow-glow: 0 20px 46px -18px rgba(14, 124, 155, 0.38);
+  --shadow-panel: 0 2px 4px rgba(11, 37, 69, 0.03), 0 26px 50px -30px rgba(11, 37, 69, 0.3);
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: var(--color-bone);
+    color: var(--color-deep);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.6;
+    /* clip, not hidden: hidden turns the body into a scroll container and kills
+       every position: sticky on the site. */
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    color: var(--color-ink);
+    letter-spacing: -0.012em;
+    line-height: 1.1;
+  }
+
+  ::selection {
+    background: var(--color-accent-soft);
+    color: var(--color-ink);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+
+  input,
+  select,
+  textarea,
+  button {
+    font: inherit;
+  }
+}
+
+/* Unlayered on purpose: these have to beat Tailwind's utility layer, and
+   unlayered rules outrank every @layer. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+html.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/* Dari and Pashto swap to a face with real Arabic-script hints. Tracking,
+   uppercase and synthesised oblique are Latin-script habits — dropped here. */
+html[dir='rtl'] {
+  --font-display: 'Vazirmatn', 'Noto Naskh Arabic', Georgia, serif;
+  --font-sans: 'Vazirmatn', 'Noto Naskh Arabic', ui-sans-serif, system-ui, sans-serif;
+}
+html[dir='rtl'] body {
+  line-height: 1.95;
+}
+html[dir='rtl'] h1,
+html[dir='rtl'] h2,
+html[dir='rtl'] h3 {
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+html[dir='rtl'] .eyebrow {
+  letter-spacing: 0;
+  text-transform: none;
+}
+/* Arabic script set with Latin tracking looks broken; pills and buttons drop it. */
+html[dir='rtl'] .badge-lite,
+html[dir='rtl'] .badge-accent,
+html[dir='rtl'] .btn-flow {
+  letter-spacing: 0;
+}
+/* 1.95 is a reading measure for paragraphs. Controls and fields are boxes, and they
+   must come out the same height as they do in English. */
+html[dir='rtl'] :is(a, button, input, select, textarea) {
+  line-height: 1.6;
+}
+html[dir='rtl'] [class*='italic'] {
+  font-style: normal;
+  letter-spacing: 0;
+}
+
+/* Section labels: humanist sans, wide tracked — never a terminal face. */
+@utility eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+@utility card {
+  background: var(--color-paper);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-soft);
+}
+
+/* The site's one card level: a soft gradient panel, no border, nothing nested inside it. */
+@utility panel {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  background: linear-gradient(158deg, #ffffff 0%, #f4fafd 42%, #e6f1f8 100%);
+  box-shadow: var(--shadow-panel);
+}
+
+@utility panel-tint {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  background: linear-gradient(158deg, #eaf4fb 0%, #dceaf6 48%, #cfe3f2 100%);
+  box-shadow: var(--shadow-panel);
+}
+
+@utility panel-navy {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  background: linear-gradient(158deg, #123a63 0%, #0b2545 46%, #071a33 100%);
+  box-shadow: var(--shadow-panel);
+}
+
+/* Pill labels, the way the healthcare landing references use them. */
+@utility badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-ink);
+  padding: 0.4rem 0.85rem 0.4rem 0.7rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+}
+
+@utility badge-lite {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  /* Logical so the tighter side always sits against the icon, whichever way the page reads. */
+  padding-block: 0.4rem;
+  padding-inline: 0.7rem 0.85rem;
+  /* Pinned: the RTL body line-height must not make the chips taller than the Latin ones. */
+  line-height: 1.6;
+  min-height: 2rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--color-ink);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(6px);
+}
+
+/* The larger pill that sits on a photograph: azure, so it holds its own on any backdrop. */
+@utility badge-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  border-radius: 999px;
+  background: var(--color-accent);
+  padding-block: 0.55rem;
+  padding-inline: 0.85rem 1.05rem;
+  line-height: 1.6;
+  /* A floor, not a clamp: the chip is the same height in Arabic script as in Latin,
+     and only grows if a long label has to wrap. */
+  min-height: 2.5rem;
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #ffffff;
+  box-shadow: var(--shadow-lift);
+}
+
+/* Oversized numeral that bleeds off the edge of a panel — decorative only. */
+@utility ghost-num {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 11vw, 8rem);
+  line-height: 0.72;
+  letter-spacing: -0.05em;
+  pointer-events: none;
+  user-select: none;
+}
+
+@utility lift {
+  transition:
+    box-shadow 650ms var(--ease-out-expo),
+    border-color 650ms var(--ease-out-expo),
+    background-color 650ms var(--ease-out-expo);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: var(--shadow-lift);
+    }
+  }
+}
+
+/* A hairline of accent light draws itself across the top edge of a panel on hover. */
+@utility edge-in {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 3px;
+    background: linear-gradient(90deg, var(--color-accent), var(--color-accent-lite));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 700ms var(--ease-out-expo);
+  }
+  @media (hover: hover) {
+    &:hover::after,
+    &:focus-within::after {
+      transform: scaleX(1);
+    }
+  }
+}
+
+/* One photograph treatment everywhere: true colour, soft radius, gentle shadow. */
+@utility photo {
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+  box-shadow: var(--shadow-panel);
+  transition: box-shadow 500ms var(--ease-out-expo);
+  @media (hover: hover) {
+    &:hover {
+      box-shadow: var(--shadow-lift);
+    }
+  }
+}
+
+/* Buttons: an oversized circle parks off the lower corner and slides in to fill
+   the pill on hover. `--flow` sets the fill so every tone stays readable. */
+@utility btn-flow {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--flow, var(--color-accent));
+    transform: translate(150%, 150%) scale(2.5);
+    transition: transform 1000ms var(--ease-out-expo);
+  }
+  &:hover::before,
+  &:focus-visible::before {
+    transform: translate(0, 0) scale(2.5);
+  }
+}
+
+@utility row-sweep {
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 800ms var(--ease-out-expo);
+}
+
+@media (hover: hover) {
+  .row-hover:hover .row-index {
+    color: var(--color-accent-deep);
+  }
+  .row-hover:hover .row-sweep {
+    transform: scaleX(1);
+  }
+}
+
+/* Directional wipes follow the reading direction. */
+[dir='rtl'] .row-sweep,
+[dir='rtl'] .edge-in::after {
+  transform-origin: right;
+}
+[dir='rtl'] .btn-flow::before {
+  transform: translate(-150%, 150%) scale(2.5);
+}
+/* Ambient light falls from the reading side, so the washes mirror with the page. */
+[dir='rtl'] .wash,
+[dir='rtl'] .wash-navy {
+  transform: scaleX(-1);
+}
+
+/* Ambient light washes — the site stays bright instead of going black for drama. */
+@utility wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 46% at 12% 8%, rgba(111, 208, 232, 0.28) 0%, transparent 62%),
+    radial-gradient(48% 42% at 88% 4%, rgba(217, 237, 244, 0.9) 0%, transparent 60%),
+    radial-gradient(52% 44% at 72% 92%, rgba(14, 124, 155, 0.12) 0%, transparent 64%);
+}
+
+@utility wash-navy {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(56% 48% at 82% 6%, rgba(111, 208, 232, 0.2) 0%, transparent 60%),
+    radial-gradient(50% 44% at 8% 88%, rgba(20, 58, 99, 0.9) 0%, transparent 64%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
