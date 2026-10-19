@@ -262,17 +262,13 @@ Pages hosts a project site under a sub-path, which a Vite SPA has to be told abo
 - The `spa-404-fallback` plugin copies `dist/index.html` to `dist/404.html`. Pages has no rewrite rule,
   so a direct visit to `/procedures` gets that file, and the router still renders the right page.
 
-The published branch is `gh-pages`, which holds only build output:
+Publishing is handled by `.github/workflows/deploy.yml`: on every push to `main` it installs, runs the
+test suite, builds, and hands `dist` to `actions/deploy-pages`. The Pages **Build and deployment →
+Deployment source** setting must be *GitHub Actions*; nothing else on that page needs touching. A manual
+run is available from the Actions tab through `workflow_dispatch`.
 
-```bash
-npm run build && npx gh-pages -d dist
-```
-
-Pages must be pointed at it once, under **Settings → Pages → Source → Deploy from a branch → `gh-pages`
-/ `/`**. Re-running the command after any change to `main` replaces the live site.
-
-To move to **Vercel** or **Netlify** instead, set `base` back to `'/'`, drop the `404.html` plugin, and
-add one rewrite so client-side routes resolve:
+To move to **Vercel** or **Netlify** instead, set `base` back to `'/'`, drop the `404.html` plugin, delete
+the workflow, and add one rewrite so client-side routes resolve:
 
 ```json
 { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
